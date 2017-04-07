@@ -1,7 +1,8 @@
 var GRID = [];
 var ROW = 10;
 var COLUMN = 10;
-var GAME_IS_FINISH = false
+var GAME_IS_FINISH = false;
+
 
 function initialize(minesweep) {
   for (var row = 0; row < ROW; row++) {
@@ -17,6 +18,20 @@ function initialize(minesweep) {
   }
 }
 
+var timer = setInterval(timerInterval, 1000)
+var time = 0
+function timerInterval(){
+  if (time >= 9){
+    $('#timer').css('color', 'red')
+    document.getElementById('timer').innerHTML = "Temps écoulé: "+ ++time+"s"
+  }
+  else {
+  document.getElementById('timer').innerHTML = "Temps: "+ ++time+"s"
+  }
+    loseGame()
+}
+
+
 
 function getRandomNumber() {
   var probability = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 3, 3, 5, 4, 1, 5, 6, 7, 8];
@@ -26,28 +41,28 @@ function getRandomNumber() {
 }
 
 
+function loseGame(){
+  var td = $('td')
+
+  if (td.hasClass('mine') || time >= 10){
+      GAME_IS_FINISH = true
+      $('body').append('<h1>Game Over</h1><h4>Score: '+ getResult()+'</h4><button onclick="restartGame()">Rejouer</button>').css("text-align", "center")
+    setTimeout(function(){
+      $('td.mine').css('background-color', 'red')
+    }, 1500)
+    clearTimeout(timer);
+  }
+}
+
+
 function restartGame(){
   location.reload();
 }
 
 
-function loseGame(){
-  var td = $('td')
-
-  if (td.hasClass('mine')){
-    setTimeout(function(){
-      console.log('your score is ', getResult())
-      GAME_IS_FINISH = true
-      // td.removeClass().addClass('opened')
-      $('body').append('<h1>Game Over</h1><h4>Score: '+ getResult()+'</h4><button onclick="restartGame()">Rejouer</button>').css("text-align", "center")
-    }, 100)
-  }
-}
-
 function getResult(){
   var sum = 0;
   $('.score-mine').each(function(){
-    // console.debug(parseInt($(this).attr('data-number')))
     sum += parseInt($(this).attr('data-number'))
   })
   return sum
@@ -60,6 +75,7 @@ $(document).ready(function(){
   minesweep.find('td').on('mousedown', function(){
     if (GAME_IS_FINISH) return
 
+
     if($(this).hasClass('unopened')){
       if(getRandomNumber() === 5){
         $(this).removeClass().addClass('mine')
@@ -67,7 +83,6 @@ $(document).ready(function(){
       }
       else {
         var randomNumber = getRandomNumber()
-        console.log(randomNumber)
         $(this)
           .removeClass()
           .addClass('mine-neighbour-'+randomNumber)

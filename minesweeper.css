@@ -40,6 +40,14 @@ button:hover {
   background-color: #D65A01;
 }
 
+#timer {
+  text-align: center;
+  font-family: 'Press Start 2P', cursive;
+  color : #D65A01;
+  margin-bottom: -15px;
+}
+
+
 /* CSS classes you can use on your table td to display the relevant tile */
 td.unopened {
   background: url('img/unopened.svg');
